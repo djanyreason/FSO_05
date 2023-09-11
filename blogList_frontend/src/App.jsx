@@ -1,13 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Bloglist from './components/Bloglist';
 import Login from './components/Login';
 import Newblog from './components/Newblog';
+import Notification from './components/Notification';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [messageTimeouts, setMessageTimeouts] = useState(0);
+  const messTimRef = useRef(messageTimeouts);
+  messTimRef.current = messageTimeouts;
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -24,6 +29,15 @@ const App = () => {
     }
   }, []);
 
+  const handleMessage = (newMessage) => {
+    setMessage(newMessage);
+    setMessageTimeouts(messTimRef.current+1);
+    setTimeout(() => {
+      if(messTimRef.current === 1) setMessage(null);
+      setMessageTimeouts(messTimRef.current-1);
+    }, 5000);
+  };
+
   const doLogin = async (credentials) => {
     if(user) return null;
 
@@ -32,12 +46,23 @@ const App = () => {
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(userLogin));
       blogService.setToken(userLogin.token);
       setUser(userLogin);
+      handleMessage({
+        color: 'green',
+        content: `${userLogin.name} logged in`
+      });
     } catch (exception) {
-      window.alert('Wrong credentials');
+      handleMessage({
+        color: 'red',
+        content: 'wrong username or password'
+      });
     }
   };
 
   const doLogout = () => {
+    handleMessage({
+      color: 'green',
+      content: `${user.name} logged out`
+    });
     window.localStorage.removeItem('loggedBloglistUser');
     blogService.setToken(null);
     setUser(null);
@@ -47,19 +72,32 @@ const App = () => {
     try {
       const addedBlog = await blogService.addBlog(newBlog);
       setBlogs(blogs.concat(addedBlog));
+      handleMessage({
+        color: 'green',
+        content: `a new blog ${addedBlog.title} by ${addedBlog.author} added`
+      });
       return true;
     } catch (exception) {
-      window.alert(exception.response.data.error);
+      handleMessage({
+        color: 'red',
+        content: `blog addition failed due to error: ${exception.response.data.error}`
+      });
       return false;
     }
   };
 
   return (
     <div>
+      <h2>{user === null
+        ? 'log in to application'
+        : 'blogs'}
+      </h2>
+      <Notification message={message}/>
       {user === null
-        ? <Login doLogin={doLogin} />
+        ? <div>
+          <Login doLogin={doLogin} />
+        </div>
         : <div>
-          <h2>blogs</h2>
           <p>{user.name} logged in<button onClick={doLogout}>logout</button></p>
           <Newblog addBlog={addBlog} />
           <Bloglist blogs={blogs} />

@@ -12,7 +12,6 @@ const Login = ({ doLogin }) => {
 
   return (
     <div>
-      <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
           username
