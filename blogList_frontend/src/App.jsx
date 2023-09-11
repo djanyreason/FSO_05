@@ -3,6 +3,7 @@ import blogService from './services/blogs';
 import loginService from './services/login';
 import Bloglist from './components/Bloglist';
 import Login from './components/Login';
+import Newblog from './components/Newblog';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -42,11 +43,27 @@ const App = () => {
     setUser(null);
   };
 
+  const addBlog = async (newBlog) => {
+    try {
+      const addedBlog = await blogService.addBlog(newBlog);
+      setBlogs(blogs.concat(addedBlog));
+      return true;
+    } catch (exception) {
+      window.alert(exception.response.data.error);
+      return false;
+    }
+  };
+
   return (
     <div>
       {user === null
         ? <Login doLogin={doLogin} />
-        : <Bloglist blogs={blogs} user={user} doLogout={doLogout}/>
+        : <div>
+          <h2>blogs</h2>
+          <p>{user.name} logged in<button onClick={doLogout}>logout</button></p>
+          <Newblog addBlog={addBlog} />
+          <Bloglist blogs={blogs} />
+        </div>
       }
     </div>
   );
