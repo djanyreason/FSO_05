@@ -116,6 +116,27 @@ const App = () => {
     }
   };
 
+  const removeBlog = async(id) => {
+    const blog = blogs.find(b => b.id === id);
+
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      try {
+        await blogService.deleteBlog(id);
+        setBlogs(blogs.filter(b => b.id !== id));
+        handleMessage({
+          color: 'green',
+          content: `Blog ${blog.title} by ${blog.author} removed`
+        });
+      } catch (exception) {
+        handleMessage({
+          color: 'red',
+          content: `blog update failed due to error: ${exception.response.data.error}`
+        });
+        return false;
+      }
+    }
+  };
+
   return (
     <div>
       <h2>{user === null
@@ -132,7 +153,7 @@ const App = () => {
           <Togglable buttonLabel='new blog' ref={newBlogVisible}>
             <Newblog addBlog={addBlog} />
           </Togglable>
-          <Bloglist blogs={blogs} addLike={addLike} />
+          <Bloglist blogs={blogs} addLike={addLike} username={user.username} remove={removeBlog} />
         </div>
       }
     </div>
