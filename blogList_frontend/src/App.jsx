@@ -96,6 +96,26 @@ const App = () => {
     }
   };
 
+  const addLike = async (id) => {
+    const blog = blogs.find(b => b.id === id);
+    const likedBlog = { ...blog, likes: blog.likes+1 };
+
+    try {
+      await blogService.updateBlog(likedBlog);
+      setBlogs(blogs.map(b => b.id !== id ? b : likedBlog));
+      handleMessage({
+        color: 'green',
+        content: `Like added to blog ${likedBlog.title}`
+      });
+    } catch (exception) {
+      handleMessage({
+        color: 'red',
+        content: `blog update failed due to error: ${exception.response.data.error}`
+      });
+      return false;
+    }
+  };
+
   return (
     <div>
       <h2>{user === null
@@ -112,7 +132,7 @@ const App = () => {
           <Togglable buttonLabel='new blog' ref={newBlogVisible}>
             <Newblog addBlog={addBlog} />
           </Togglable>
-          <Bloglist blogs={blogs} />
+          <Bloglist blogs={blogs} addLike={addLike} />
         </div>
       }
     </div>
