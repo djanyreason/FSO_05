@@ -74,6 +74,12 @@ const App = () => {
   const addBlog = async (newBlog) => {
     try {
       const addedBlog = await blogService.addBlog(newBlog);
+      const id = addedBlog.user;
+      addedBlog.user = {
+        id: id,
+        username: user.username,
+        name: user.name
+      };
       setBlogs(blogs.concat(addedBlog));
       handleMessage({
         color: 'green',

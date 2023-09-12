@@ -9,8 +9,6 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   };
 
-  console.log(blog);
-
   const [hidden, setHidden] = useState('true');
   const toggleHidden = () => setHidden(!hidden);
 
