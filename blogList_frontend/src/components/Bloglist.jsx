@@ -5,9 +5,11 @@ const Bloglist = ({ blogs, addLike }) => {
 
   return (
     <div>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} like={() => addLike(blog.id)} />
-      )}
+      {blogs
+        .sort((a, b) => b.likes-a.likes)
+        .map(blog =>
+          <Blog key={blog.id} blog={blog} like={() => addLike(blog.id)} />
+        )}
     </div>
   );
 };
