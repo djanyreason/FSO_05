@@ -1,4 +1,5 @@
 import Blog from './Blog';
+import PropTypes from 'prop-types';
 
 const Bloglist = ({ blogs, addLike, username, remove }) => {
   if(!blogs) return (<div></div>);
@@ -17,6 +18,13 @@ const Bloglist = ({ blogs, addLike, username, remove }) => {
         )}
     </div>
   );
+};
+
+Bloglist.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  addLike: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  remove: PropTypes.func.isRequired
 };
 
 export default Bloglist;
