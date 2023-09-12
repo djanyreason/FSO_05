@@ -5,6 +5,7 @@ import Bloglist from './components/Bloglist';
 import Login from './components/Login';
 import Newblog from './components/Newblog';
 import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -13,6 +14,8 @@ const App = () => {
   const [messageTimeouts, setMessageTimeouts] = useState(0);
   const messTimRef = useRef(messageTimeouts);
   messTimRef.current = messageTimeouts;
+
+  const newBlogVisible = useRef();
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -76,6 +79,7 @@ const App = () => {
         color: 'green',
         content: `a new blog ${addedBlog.title} by ${addedBlog.author} added`
       });
+      newBlogVisible.current.toggleVisibility();
       return true;
     } catch (exception) {
       handleMessage({
@@ -99,7 +103,9 @@ const App = () => {
         </div>
         : <div>
           <p>{user.name} logged in<button onClick={doLogout}>logout</button></p>
-          <Newblog addBlog={addBlog} />
+          <Togglable buttonLabel='new blog' ref={newBlogVisible}>
+            <Newblog addBlog={addBlog} />
+          </Togglable>
           <Bloglist blogs={blogs} />
         </div>
       }
