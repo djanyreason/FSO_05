@@ -27,31 +27,34 @@ const Newblog = ({ addBlog }) => {
       <div>
         title:
         <input
-          type="text"
+          type='text'
           value={title}
-          name="Title"
+          name='Title'
           onChange={({ target }) => setTitle(target.value)}
+          id='blogTitle'
         />
       </div>
       <div>
         author:
         <input
-          type="text"
+          type='text'
           value={author}
-          name="Author"
+          name='Author'
           onChange={({ target }) => setAuthor(target.value)}
+          id='author'
         />
       </div>
       <div>
         url:
         <input
-          type="text"
+          type='text'
           value={url}
-          name="URL"
+          name='URL'
           onChange={({ target }) => setURL(target.value)}
+          id='url'
         />
       </div>
-      <button type="submit">create</button>
+      <button type='submit'>create</button>
     </form>
   );
 };
