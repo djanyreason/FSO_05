@@ -12,6 +12,7 @@ const Blog = ({ blog, like, deleteBlog }) => {
 
   const [hidden, setHidden] = useState('true');
   const toggleHidden = () => setHidden(!hidden);
+  const hideWhenHidden = { display: hidden ? 'none' : '' };
 
   return (
     <div style={blogStyle}>
@@ -22,20 +23,15 @@ const Blog = ({ blog, like, deleteBlog }) => {
           : 'hide'
         }
       </button>
-      { hidden
+      <div className='url' style={hideWhenHidden}>{blog.url}</div>
+      <div className='likes' style={hideWhenHidden}>
+        likes {blog.likes}
+        <button onClick={like}>like</button>
+      </div>
+      <div className='userName' style={hideWhenHidden}>{blog.user.name}</div>
+      { deleteBlog === null
         ? <></>
-        : <div>
-          <div>{blog.url}</div>
-          <div>
-            likes {blog.likes}
-            <button onClick={like}>like</button>
-          </div>
-          <div>{blog.user.name}</div>
-          { deleteBlog === null
-            ? <></>
-            : <button onClick={deleteBlog}>remove</button>
-          }
-        </div>
+        : <button onClick={deleteBlog} style={hideWhenHidden}>remove</button>
       }
     </div>
   );
