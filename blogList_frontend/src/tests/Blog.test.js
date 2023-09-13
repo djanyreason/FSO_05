@@ -20,7 +20,7 @@ describe('<Blog />', () => {
   });
 
   test('renders title and author', () => {
-    const { container } = render(<Blog blog={blog} likes={() => null} deleteBlog={null} />);
+    const { container } = render(<Blog blog={blog} like={() => null} deleteBlog={null} />);
 
     const titleCheck = screen.getByText(blog.title, { exact: false });
     const authorCheck = screen.getByText(blog.author, { exact: false });
@@ -30,7 +30,7 @@ describe('<Blog />', () => {
   });
 
   test('does not render url or number of likes at start', () => {
-    const { container } = render(<Blog blog={blog} likes={() => null} deleteBlog={null} />);
+    const { container } = render(<Blog blog={blog} like={() => null} deleteBlog={null} />);
 
     const url = container.querySelector('.url');
     const likes = container.querySelector('.likes');
@@ -38,4 +38,20 @@ describe('<Blog />', () => {
     expect(url).toHaveStyle('display: none');
     expect(likes).toHaveStyle('display: none');
   });
+
+  test('two like button clicks result in two calls', async () => {
+    const mockLikeHandler = jest.fn();
+    const { container } = render(<Blog blog={blog} like={mockLikeHandler} deleteBlog={null} />);
+
+    const user = userEvent.setup();
+
+    const viewButton=screen.getByText('view');
+    await user.click(viewButton);
+
+    const likeButton=screen.getByText('like');
+    await user.click(likeButton);
+    await user.click(likeButton);
+
+    expect(mockLikeHandler.mock.calls).toHaveLength(2);
+  })
 });
