@@ -29,7 +29,7 @@ describe('<Blog />', () => {
     expect(authorCheck).toBeDefined();
   });
 
-  test('does not render url or number of likes at start', () => {
+  test('does not display url or number of likes at start', () => {
     const { container } = render(<Blog blog={blog} like={() => null} deleteBlog={null} />);
 
     const url = container.querySelector('.url');
@@ -38,6 +38,22 @@ describe('<Blog />', () => {
     expect(url).toHaveStyle('display: none');
     expect(likes).toHaveStyle('display: none');
   });
+
+  test('displays url and number of likes after view button is clicked', async () => {
+    const { container } = render(<Blog blog={blog} like={() => null} deleteBlog={null} />);
+
+    const user = userEvent.setup();
+
+    const viewButton=screen.getByText('view');
+    await user.click(viewButton);
+
+    const url = container.querySelector('.url');
+    const likes = container.querySelector('.likes');
+
+    expect(url).not.toHaveStyle('display: none');
+    expect(likes).not.toHaveStyle('display: none');
+
+  })
 
   test('two like button clicks result in two calls', async () => {
     const mockLikeHandler = jest.fn();
