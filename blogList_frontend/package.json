@@ -4,11 +4,13 @@
   "description": "Full Stack Open pt. 5 bloglist frontend project",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "cypress:open": "cypress open",
+    "test:e2e": "cypress run"
   },
   "jest": {
     "testEnvironment": "jsdom"
@@ -28,7 +30,9 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
+    "cypress": "^13.2.0",
     "eslint": "^8.48.0",
+    "eslint-plugin-cypress": "^2.14.0",
     "eslint-plugin-jest": "^27.2.3",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
