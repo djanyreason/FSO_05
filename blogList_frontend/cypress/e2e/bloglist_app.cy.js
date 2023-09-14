@@ -66,7 +66,25 @@ describe('Blog app', function () {
         .and('contain', 'a blogger');
     });
 
-    describe('and a blog in blogList', function () {
+    it('user can like a blog', function () {
+      const blogObj = {
+        title: 'a blog title',
+        author: 'a blogger',
+        url: 'http://blago.blog'
+      };
+      cy.addBlog({ blogObj: blogObj });
+
+      cy.contains('view').click();
+
+      cy.get('.likes').contains('likes 0');
+      cy.get('.likeButton').click();
+
+      cy.get('.likes')
+        .contains('likes 1')
+        .and('not.contain', 'likes 0');
+    });
+
+    describe('and a blog they created in blogList', function () {
       beforeEach(function () {
         const blogObj = {
           title: 'a blog title',
@@ -76,16 +94,23 @@ describe('Blog app', function () {
         cy.addBlog({ blogObj: blogObj });
       });
 
-      it('user can like a blog', function () {
+      it('user can delete blog', function() {
+        cy.get('.blogList')
+          .should('contain', 'a blog title')
+          .and('contain', 'a blogger');
+
         cy.contains('view').click();
 
-        cy.get('.likes').contains('likes 0');
-        cy.get('.likeButton').click();
+        cy.contains('remove').click();
 
-        cy.get('.likes')
-          .contains('likes 1')
-          .and('not.contain', 'likes 0');
-      });
+        cy.get('.notification')
+          .contains('Blog a blog title by a blogger removed')
+          .and('have.css', 'color', 'rgb(0, 128, 0)');
+
+        cy.get('.blogList')
+          .should('not.contain', 'a blog title')
+          .and('not.contain', 'a blogger');
+      })
     });
   });
 });
