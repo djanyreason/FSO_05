@@ -8,3 +8,15 @@ Cypress.Commands.add('login', ({ username, password }) => {
     cy.visit('')
   });
 });
+
+Cypress.Commands.add('addBlog', ({ blogObj }) => {
+  const auth = `Bearer ${JSON.parse(localStorage.getItem('loggedBloglistUser')).token}`
+  cy.request({
+    method: 'POST', 
+    url: `${Cypress.env('BACKEND')}/blogs`, 
+    body: blogObj,
+    headers: { Authorization: auth}
+  }).then(({ body }) => {
+    cy.visit('')
+  });
+});

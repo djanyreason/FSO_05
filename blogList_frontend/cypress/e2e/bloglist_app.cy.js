@@ -1,4 +1,3 @@
-
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`);
@@ -46,11 +45,11 @@ describe('Blog app', function () {
   });
 
   describe('When logged in', function () {
-    beforeEach(function() {
+    beforeEach(function () {
       cy.login({ username: 'foo', password: 'bar' });
     });
 
-    it('A blog can be created', function() {
+    it('A blog can be created', function () {
       cy.contains('new blog').click();
 
       cy.get('#blogTitle').type('a blog title');
@@ -65,6 +64,28 @@ describe('Blog app', function () {
       cy.get('.blogList')
         .should('contain', 'a blog title')
         .and('contain', 'a blogger');
+    });
+
+    describe('and a blog in blogList', function () {
+      beforeEach(function () {
+        const blogObj = {
+          title: 'a blog title',
+          author: 'a blogger',
+          url: 'http://blago.blog'
+        };
+        cy.addBlog({ blogObj: blogObj });
+      });
+
+      it('user can like a blog', function () {
+        cy.contains('view').click();
+
+        cy.get('.likes').contains('likes 0');
+        cy.get('.likeButton').click();
+
+        cy.get('.likes')
+          .contains('likes 1')
+          .and('not.contain', 'likes 0');
+      });
     });
   });
 });

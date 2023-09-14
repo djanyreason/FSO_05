@@ -26,7 +26,7 @@ const Blog = ({ blog, like, deleteBlog }) => {
       <div className='url' style={hideWhenHidden}>{blog.url}</div>
       <div className='likes' style={hideWhenHidden}>
         likes {blog.likes}
-        <button onClick={like}>like</button>
+        <button className = 'likeButton' onClick={like}>like</button>
       </div>
       <div className='userName' style={hideWhenHidden}>{blog.user.name}</div>
       { deleteBlog === null
