@@ -5,7 +5,7 @@ const Bloglist = ({ blogs, addLike, username, remove }) => {
   if(!blogs) return (<div></div>);
 
   return (
-    <div>
+    <div className='blogList'>
       {blogs
         .sort((a, b) => b.likes-a.likes)
         .map(blog =>

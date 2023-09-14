@@ -44,4 +44,27 @@ describe('Blog app', function () {
       cy.get('html').should('not.contain','blogs')
     });
   });
+
+  describe('When logged in', function () {
+    beforeEach(function() {
+      cy.login({ username: 'foo', password: 'bar' });
+    });
+
+    it('A blog can be created', function() {
+      cy.contains('new blog').click();
+
+      cy.get('#blogTitle').type('a blog title');
+      cy.get('#author').type('a blogger');
+      cy.get('#url').type('http://blago.blog');
+      cy.get('#blogAddButton').click();
+
+      cy.get('.notification')
+        .contains('a new blog a blog title by a blogger added')
+        .and('have.css', 'color', 'rgb(0, 128, 0)');
+      
+      cy.get('.blogList')
+        .should('contain', 'a blog title')
+        .and('contain', 'a blogger');
+    });
+  });
 });
