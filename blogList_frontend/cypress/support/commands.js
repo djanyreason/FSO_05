@@ -15,8 +15,16 @@ Cypress.Commands.add('addBlog', ({ blogObj }) => {
     method: 'POST', 
     url: `${Cypress.env('BACKEND')}/blogs`, 
     body: blogObj,
-    headers: { Authorization: auth}
+    headers: { Authorization: auth }
   }).then(({ body }) => {
     cy.visit('')
+  });
+});
+
+Cypress.Commands.add('addUser', ({ credentials }) =>{
+  cy.request({
+    method: 'POST',
+    url: `${Cypress.env('BACKEND')}/users/`,
+    body: credentials
   });
 });

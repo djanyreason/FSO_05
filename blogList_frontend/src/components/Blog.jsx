@@ -31,7 +31,7 @@ const Blog = ({ blog, like, deleteBlog }) => {
       <div className='userName' style={hideWhenHidden}>{blog.user.name}</div>
       { deleteBlog === null
         ? <></>
-        : <button onClick={deleteBlog} style={hideWhenHidden}>remove</button>
+        : <button className='deleteButton' onClick={deleteBlog} style={hideWhenHidden}>remove</button>
       }
     </div>
   );

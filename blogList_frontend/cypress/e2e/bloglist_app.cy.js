@@ -6,7 +6,7 @@ describe('Blog app', function () {
       username: 'foo',
       password: 'bar',
     };
-    cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user);
+    cy.addUser({ credentials: user });
     cy.visit('');
   });
 
@@ -110,7 +110,33 @@ describe('Blog app', function () {
         cy.get('.blogList')
           .should('not.contain', 'a blog title')
           .and('not.contain', 'a blogger');
-      })
+      });
+
+      it('only creator can see the remove button', function() {
+        cy.get('.blogList')
+          .should('contain', 'a blog title')
+          .and('contain', 'a blogger');
+
+        cy.contains('view').click();
+
+        cy.get('.blogList')
+          .get('.deleteButton');
+
+        const newUser = {
+          username: 'barf',
+          password: 'food',
+          name: 'Barf Food'
+        };
+        cy.addUser({ credentials: newUser });
+        cy.login(newUser);
+
+        cy.contains('view').click();
+
+        cy.get('.blogList');
+        cy.get('.blogList')
+          .get('.deleteButton')
+          .should('not.exist');
+      });
     });
   });
 });
