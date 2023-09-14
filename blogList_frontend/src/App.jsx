@@ -51,7 +51,7 @@ const App = () => {
       setUser(userLogin);
       handleMessage({
         color: 'green',
-        content: `${userLogin.name} logged in`
+        content: `${userLogin.name} (b)logged in`
       });
     } catch (exception) {
       handleMessage({
@@ -140,7 +140,7 @@ const App = () => {
   return (
     <div>
       <h2>{user === null
-        ? 'log in to application'
+        ? '(b)log in to application'
         : 'blogs'}
       </h2>
       <Notification message={message}/>
