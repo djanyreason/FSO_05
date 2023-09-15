@@ -15,7 +15,7 @@ const Blog = ({ blog, like, deleteBlog }) => {
   const hideWhenHidden = { display: hidden ? 'none' : '' };
 
   return (
-    <div style={blogStyle}>
+    <div className='aBlog' style={blogStyle}>
       {blog.title} {blog.author}
       <button onClick={toggleHidden} style={{ marginLeft: 10 }}>
         { hidden

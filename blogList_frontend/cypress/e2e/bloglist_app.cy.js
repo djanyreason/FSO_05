@@ -138,5 +138,52 @@ describe('Blog app', function () {
           .should('not.exist');
       });
     });
+
+    describe('and several blogs are in the bloglist', function () {
+      beforeEach(function () {
+        const blogObj = {
+          title: 'blog one',
+          author: 'a blogger',
+          url: 'http://blago.blog',
+          likes: 2.5
+        };
+        cy.addBlog({ blogObj: blogObj });
+        const blogObj2 = {
+          title: 'blog two',
+          author: 'a blogger',
+          url: 'http://blago.blog',
+          likes: 1
+        };
+        cy.addBlog({ blogObj: blogObj2 });
+        const blogObj3 = {
+          title: 'blog three',
+          author: 'a blogger',
+          url: 'http://blago.blog',
+          likes: 0.75
+        };
+        cy.addBlog({ blogObj: blogObj3 });
+      });
+
+      it('blogs are initially ordered from most to least likes', function () {
+        cy.get('.aBlog').eq(0).should('contain', 'blog one');
+        cy.get('.aBlog').eq(1).should('contain', 'blog two');
+        cy.get('.aBlog').eq(2).should('contain', 'blog three');
+      });
+
+      it('blogs reorder correctly when user likes a blog', function() {
+        cy.get('.aBlog').eq(2).contains('view').click();
+        cy.get('.aBlog').eq(2).contains('like').click();
+
+        cy.get('.aBlog').eq(0).should('contain', 'blog one');
+        cy.get('.aBlog').eq(1).should('contain', 'blog three');
+        cy.get('.aBlog').eq(2).should('contain', 'blog two');
+
+        cy.get('.aBlog').eq(1).contains('like').click();
+
+        cy.get('.aBlog').eq(0).should('contain', 'blog three');
+        cy.get('.aBlog').eq(1).should('contain', 'blog one');
+        cy.get('.aBlog').eq(2).should('contain', 'blog two');
+      });
+    });
   });
 });
