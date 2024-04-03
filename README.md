@@ -18,4 +18,4 @@ The API also handles token-based user authentication.
 
 The project also includes testing through jest - tests are included in the /blogList/tests subfolder.
 
-Topics covered in this project include React, components, contrilling state with the useState hook, modifying state with the useRef hook, connecting front-end and back-end, local storage, PropTypes, linting, testing react apps with jest, end-to-end testing with Cypress.
+Topics covered in this project include React, components, controlling state with the useState hook, modifying state with the useRef hook, connecting front-end and back-end, local storage, PropTypes, linting, testing react apps with jest, end-to-end testing with Cypress.
