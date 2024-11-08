@@ -12,10 +12,10 @@ const Newblog = ({ addBlog }) => {
     const result = await addBlog({
       title: title,
       author: author,
-      url: url
+      url: url,
     });
 
-    if(result) {
+    if (result) {
       setTitle('');
       setAuthor('');
       setURL('');
@@ -27,6 +27,7 @@ const Newblog = ({ addBlog }) => {
       <div>
         title:
         <input
+          data-testid='title'
           type='text'
           value={title}
           name='Title'
@@ -37,6 +38,7 @@ const Newblog = ({ addBlog }) => {
       <div>
         author:
         <input
+          data-testid='author'
           type='text'
           value={author}
           name='Author'
@@ -47,6 +49,7 @@ const Newblog = ({ addBlog }) => {
       <div>
         url:
         <input
+          data-testid='url'
           type='text'
           value={url}
           name='URL'
@@ -54,13 +57,15 @@ const Newblog = ({ addBlog }) => {
           id='url'
         />
       </div>
-      <button id='blogAddButton' type='submit'>create</button>
+      <button id='blogAddButton' type='submit'>
+        create
+      </button>
     </form>
   );
 };
 
 Newblog.proptypes = {
-  addBlog: PropTypes.func.isRequired
+  addBlog: PropTypes.func.isRequired,
 };
 
 export default Newblog;

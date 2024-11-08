@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
+const { doLogin, makeBlog } = require('./testHelper');
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -27,9 +28,7 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByTestId('username').fill('foo');
-      await page.getByTestId('password').fill('bar');
-      await page.getByRole('button', { name: 'login' }).click();
+      await doLogin(page, 'foo', 'bar');
 
       const notificationDiv = await page.locator('.notification');
 
@@ -45,9 +44,7 @@ describe('Blog app', () => {
     });
 
     test('fails with wrong credentials', async ({ page }) => {
-      await page.getByTestId('username').fill('fu');
-      await page.getByTestId('password').fill('bar');
-      await page.getByRole('button', { name: 'login' }).click();
+      await doLogin(page, 'fu', 'bar');
 
       const notificationDiv = await page.locator('.notification');
 
@@ -60,6 +57,25 @@ describe('Blog app', () => {
       await expect(notificationDiv).toHaveCSS('color', 'rgb(255, 0, 0)');
 
       await expect(page.getByText('Foo Bar logged in')).not.toBeVisible();
+    });
+  });
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await doLogin(page, 'foo', 'bar');
+    });
+
+    test('a new blog can be created', async ({ page }) => {
+      await makeBlog(
+        page,
+        'React patterns',
+        'Michael Chan',
+        'https://reactpatterns.com/'
+      );
+
+      await expect(
+        page.locator('.aBlog').filter({ hasText: 'React patterns' })
+      ).toBeVisible();
     });
   });
 });
