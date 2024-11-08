@@ -14,9 +14,10 @@ const Login = ({ doLogin }) => {
   return (
     <div>
       <form onSubmit={handleLogin}>
-        <div data-testid='username'>
+        <div>
           username
           <input
+            data-testid='username'
             id='username'
             type='text'
             value={username}
@@ -24,9 +25,10 @@ const Login = ({ doLogin }) => {
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
-        <div data-testid='password'>
+        <div>
           password
           <input
+            data-testid='password'
             id='password'
             type='password'
             value={password}
