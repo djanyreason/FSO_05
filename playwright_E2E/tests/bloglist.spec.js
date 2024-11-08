@@ -1,5 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
-const { doLogin, makeBlog } = require('./testHelper');
+const { doLogin, doLogout, makeBlog } = require('./testHelper');
+const { before } = require('node:test');
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -9,6 +10,13 @@ describe('Blog app', () => {
         name: 'Foo Bar',
         username: 'foo',
         password: 'bar',
+      },
+    });
+    await request.post('http://localhost:3003/api/users', {
+      data: {
+        name: 'Boo Far',
+        username: 'boo',
+        password: 'far',
       },
     });
 
@@ -76,6 +84,52 @@ describe('Blog app', () => {
       await expect(
         page.locator('.aBlog').filter({ hasText: 'React patterns' })
       ).toBeVisible();
+    });
+
+    describe('...and a blog has been created', () => {
+      beforeEach(async ({ page }) => {
+        await makeBlog(
+          page,
+          'React patterns',
+          'Michael Chan',
+          'https://reactpatterns.com/'
+        );
+      });
+
+      test('the blog can be liked', async ({ page }) => {
+        const firstBlog = await page.locator('.aBlog').first();
+
+        await firstBlog.getByRole('button', { name: 'view' }).click();
+
+        await expect(firstBlog).toContainText('likes 0');
+
+        await firstBlog.getByRole('button', { name: 'like' }).click();
+
+        await expect(firstBlog).toContainText('likes 1');
+      });
+    });
+
+    describe('... and multiple blogs have been added', () => {
+      beforeEach(async ({ page }) => {
+        await makeBlog(
+          page,
+          'React patterns',
+          'Michael Chan',
+          'https://reactpatterns.com/'
+        );
+        await makeBlog(
+          page,
+          'Canonical string reduction',
+          'Edsger W. Dijkstra',
+          'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html'
+        );
+        await makeBlog(
+          page,
+          'First class tests',
+          'Robert C. Martin',
+          'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll'
+        );
+      });
     });
   });
 });

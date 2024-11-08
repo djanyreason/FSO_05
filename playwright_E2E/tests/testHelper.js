@@ -4,6 +4,10 @@ const doLogin = async (page, username, password) => {
   await page.getByRole('button', { name: 'login' }).click();
 };
 
+const doLogout = async (page) => {
+  await page.getByRole('button', { name: 'logout' }).click();
+};
+
 const makeBlog = async (page, title, author, url) => {
   await page.getByRole('button', { name: 'new blog' }).click();
   await page.getByTestId('title').fill(title);
@@ -13,4 +17,4 @@ const makeBlog = async (page, title, author, url) => {
   await page.locator('.aBlog').filter({ hasText: title }).waitFor();
 };
 
-export { doLogin, makeBlog };
+export { doLogin, doLogout, makeBlog };
