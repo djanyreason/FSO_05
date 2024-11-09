@@ -1,5 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
 const { doLogin, doLogout, makeBlog } = require('./testHelper');
+const exp = require('constants');
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -165,6 +166,73 @@ describe('Blog app', () => {
           'First class tests',
           'Robert C. Martin',
           'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll'
+        );
+      });
+
+      test('blogs are arranged in descending order of likes', async ({
+        page,
+      }) => {
+        const blogMC = await page
+          .locator('.aBlog')
+          .filter({ hasText: 'Michael Chan' });
+        const blogEWD = await page
+          .locator('.aBlog')
+          .filter({ hasText: 'Edsger W. Dijkstra' });
+        const blogRCM = await page
+          .locator('.aBlog')
+          .filter({ hasText: 'Robert C. Martin' });
+
+        await blogMC.getByRole('button', { name: 'view' }).click();
+        await blogEWD.getByRole('button', { name: 'view' }).click();
+        await blogRCM.getByRole('button', { name: 'view' }).click();
+
+        for (let i = 1; i <= 3; i++) {
+          await blogMC.getByRole('button', { name: 'like' }).click();
+          await blogMC.filter({ hasText: 'likes ' + i }).waitFor();
+        }
+        for (let i = 1; i <= 1; i++) {
+          await blogEWD.getByRole('button', { name: 'like' }).click();
+          await blogEWD.filter({ hasText: 'likes ' + i }).waitFor();
+        }
+
+        await expect(page.locator('.aBlog').nth(0)).toContainText(
+          'Michael Chan'
+        );
+        await expect(page.locator('.aBlog').nth(1)).toContainText(
+          'Edsger W. Dijkstra'
+        );
+        await expect(page.locator('.aBlog').nth(2)).toContainText(
+          'Robert C. Martin'
+        );
+
+        for (let i = 1; i <= 2; i++) {
+          await blogRCM.getByRole('button', { name: 'like' }).click();
+          await blogRCM.filter({ hasText: 'likes ' + i }).waitFor();
+        }
+
+        await expect(page.locator('.aBlog').nth(0)).toContainText(
+          'Michael Chan'
+        );
+        await expect(page.locator('.aBlog').nth(1)).toContainText(
+          'Robert C. Martin'
+        );
+        await expect(page.locator('.aBlog').nth(2)).toContainText(
+          'Edsger W. Dijkstra'
+        );
+
+        for (let i = 3; i <= 4; i++) {
+          await blogRCM.getByRole('button', { name: 'like' }).click();
+          await blogRCM.filter({ hasText: 'likes ' + i }).waitFor();
+        }
+
+        await expect(page.locator('.aBlog').nth(0)).toContainText(
+          'Robert C. Martin'
+        );
+        await expect(page.locator('.aBlog').nth(1)).toContainText(
+          'Michael Chan'
+        );
+        await expect(page.locator('.aBlog').nth(2)).toContainText(
+          'Edsger W. Dijkstra'
         );
       });
     });
