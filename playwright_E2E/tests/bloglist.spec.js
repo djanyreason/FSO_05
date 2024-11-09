@@ -107,6 +107,23 @@ describe('Blog app', () => {
 
         await expect(firstBlog).toContainText('likes 1');
       });
+
+      test('the blog can be deleted by the user who added it', async ({
+        page,
+      }) => {
+        const firstBlog = await page.locator('.aBlog').first();
+
+        await firstBlog.getByRole('button', { name: 'view' }).click();
+
+        await expect(
+          firstBlog.getByRole('button', { name: 'remove' })
+        ).toBeVisible();
+
+        page.on('dialog', (dialog) => dialog.accept());
+        await firstBlog.getByRole('button', { name: 'remove' }).click();
+
+        await expect(firstBlog).not.toBeVisible();
+      });
     });
 
     describe('... and multiple blogs have been added', () => {
