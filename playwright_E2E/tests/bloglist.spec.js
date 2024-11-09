@@ -1,6 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
 const { doLogin, doLogout, makeBlog } = require('./testHelper');
-const { before } = require('node:test');
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -123,6 +122,27 @@ describe('Blog app', () => {
         await firstBlog.getByRole('button', { name: 'remove' }).click();
 
         await expect(firstBlog).not.toBeVisible();
+      });
+
+      test('only the user who added the blog can see the remove button', async ({
+        page,
+      }) => {
+        const firstBlog = await page.locator('.aBlog').first();
+
+        await firstBlog.getByRole('button', { name: 'view' }).click();
+
+        await expect(
+          firstBlog.getByRole('button', { name: 'remove' })
+        ).toBeVisible();
+
+        await doLogout(page);
+        await doLogin(page, 'boo', 'far');
+
+        await firstBlog.getByRole('button', { name: 'view' }).click();
+
+        await expect(
+          firstBlog.getByRole('button', { name: 'remove' })
+        ).not.toBeVisible();
       });
     });
 
